@@ -22,7 +22,7 @@ var job = new CronJob(
 
 job.start();
 
-bot.onText(/check/, () => {
+bot.onText(/t/i, () => {
   const req = require("./request.js");
   req.autofill.then(res => {
     bot.sendMessage(telegramId, res);
