@@ -28,10 +28,11 @@ var job = new CronJob(
 
 job.start();
 
-bot.onText(/\/echo (.+)/, msg => {
-  if (user[msg] !== undefined) {
+bot.onText(/\/echo (.+)/, (msg, match) => {
+  var message = match[1]
+  if (user[message] !== undefined) {
     const req = require("./request.js");
-    req.autofill(msg, encodeURI(user[msg])).then(res => {
+    req.autofill(message, encodeURI(user[message])).then(res => {
       bot.sendMessage(telegramId, res);
       // console.log(res)
     });
