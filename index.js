@@ -28,7 +28,7 @@ var job = new CronJob(
 
 job.start();
 
-bot.onText(/t/i, msg => {
+bot.onText(/\/echo (.+)/, msg => {
   if (user[msg] !== undefined) {
     const req = require("./request.js");
     req.autofill(msg, encodeURI(user[msg])).then(res => {
