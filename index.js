@@ -4,7 +4,6 @@ var CronJob = require("cron").CronJob;
 const TelegramBot = require("node-telegram-bot-api");
 const token = "1062087849:AAFnz4p26ac3DsjPXEDh0fvMiahQjEZQRS8";
 const bot = new TelegramBot(token, { polling: true });
-const telegramId = []
 
 
 user = {
@@ -21,7 +20,7 @@ user = {
     "telegramId": null
   },
   "10506120": {
-    "name": "杜承浩",
+    "name": "杜承浩", 
     "telegramId": null
   }
 };
