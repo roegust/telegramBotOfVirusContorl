@@ -5,9 +5,6 @@ const url = "https://familyweb.wistron.com/whrs/temperature_addnew_act.aspx";
 const j = request.jar();
 
 const moment = require("moment-timezone");
-var dateToFill = moment()
-  .tz("Asia/Taipei")
-  .format("YYYY/MM/DD");
 
 headers = {
   Cookie: "",
@@ -23,16 +20,20 @@ form = {
   trip: 1,
   travel: 1,
   notice: 1,
-  measure_date: dateToFill, //like '2020/3/11'
+  measure_date: null, //like '2020/3/11'
   symptom: 1
 };
 
 // for fiddler fetch info
 // process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
-exports.autofill(userid, usernm) = new Promise((res, rej) => {
+exports.autofill = (userid, usernm) => new Promise((res, rej) => {
   try {
-    headers["Cookie"] = cookie + "&empid=" + userid + "&name=" + usernm;
+    headers["Cookie"] = cookie + "&empid=" + userid + "&name=" + encodeURI(usernm);
+    const dateToFill = moment()
+    .tz("Asia/Taipei")
+    .format("YYYY/MM/DD");
+    form["measure_date"] = dateToFill
     form["empid"] = userid;
 
     request.post(
@@ -43,10 +44,10 @@ exports.autofill(userid, usernm) = new Promise((res, rej) => {
         headers: headers
         // proxy: "http://127.0.0.1:8888" // for fiddler
       },
-      function(err, resp, body) {
+      function (err, resp, body) {
         // resp_msg = body
         resp_msg = body.split`('`[1].split`')`[0];
-        res(`[${dateToFill}] (${userid}}) ${resp_msg}`);
+        res(`[${dateToFill}] (${userid}:${usernm}) ${resp_msg}`);
       }
     );
   } catch (err) {
