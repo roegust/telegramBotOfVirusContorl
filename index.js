@@ -41,9 +41,9 @@ job.start();
 
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, `*Quick start* 
-  /info empid - check info or add new user( if you are not in list )
-  /status empid - check the status of today's reprot 
-
+  /info empid - 1. Check your information in the google sheet is correct.
+                2. If you haven't add your info in sheet,
+                   please attention on the chatId and fill in your infomation on the google sheet.
   `, {parse_mode: "Markdown"});
 });
 
@@ -61,7 +61,7 @@ bot.onText(/\/info (\d{8})/, (msg, match) => {
 });
 
 user
-bot.onText(/\/status (\d{8})/, (msg, match) => {
+bot.onText(/\/test (\d{8})/, (msg, match) => {
   
   reloadUserList().then(()=>{
     const message = match[1];
