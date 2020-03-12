@@ -5,30 +5,22 @@ const TelegramBot = require("node-telegram-bot-api");
 const token = "1062087849:AAFnz4p26ac3DsjPXEDh0fvMiahQjEZQRS8";
 const bot = new TelegramBot(token, { polling: true });
 
+//googlesheet setting
 
-user = {
-  "10610150": {
-    "name": "宗家榮",
-    "telegramId": null
-  },
-  "10511141": {
-    "name": "林應凱",
-    "telegramId": null
-  },
-  "10602105": {
-    "name": "盧建廷",
-    "telegramId": null
-  },
-  "10506120": {
-    "name": "杜承浩", 
-    "telegramId": null
-  }
-};
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+const doc = new GoogleSpreadsheet('16ctbzOVdulA8poPSlj6SUNk50HO-Fi94aJbh8O_kvsg');
+const apikey = "AIzaSyA47786EfVYYCcALQRV5JcsvNR-YVAAKR8"
+
+
+user = {};
+
 
 // run the job everyday at 8 a.m.
 var job = new CronJob(
   "0 8  * * *",
   function () {
+    
+    reloadUserList();
     Object.keys(user).forEach(e => {
       // console.log(e)
       const req = require("./request.js");
@@ -46,11 +38,29 @@ var job = new CronJob(
 job.start();
 
 bot.onText(/\/start/, (msg) => {
-  bot.sendMessage(msg.chat.id, "Please enter the empid to add yourself in daily job and check status");
+  bot.sendMessage(msg.chat.id, `*Quick start* 
+  /info empid - check info or add new user( if you are not in list )
+  /status empid - check the status of today's reprot 
+
+  `, {parse_mode: "Markdown"});
 });
 
-bot.onText(/\d{8}/, (msg) => {
-  const message = msg.text
+bot.onText(/\/info (\d{8})/, (msg, match) => {  
+  reloadUserList();
+  if(user[match[1]] !== undefined){    
+    bot.sendMessage(msg.chat.id, `userId: ${match[1]} , name: ${user[match[1]].name} ,chatId: ${user[match[1]].telegramId}`);
+  }else{
+    bot.sendMessage(msg.chat.id, `no information of this user:  ${match[1]}`);
+    bot.sendMessage(msg.chat.id, "Please add your info at https://docs.google.com/spreadsheets/d/16ctbzOVdulA8poPSlj6SUNk50HO-Fi94aJbh8O_kvsg/edit?usp=sharing");
+    bot.sendMessage(msg.chat.id, "Your Chat ID is " + msg.chat.id);
+  }
+});
+
+user
+bot.onText(/\/status (\d{8})/, (msg, match) => {
+  
+  reloadUserList();
+  const message = match[1];
 
   if (user[message] !== undefined && user[message].telegramId === null) {
     user[message].telegramId = msg.chat.id
@@ -66,3 +76,23 @@ bot.onText(/\d{8}/, (msg) => {
     // if(telegramId.indexOf(msg.chat.id))
   }
 });
+
+async function reloadUserList(){
+  
+  doc.useApiKey(apikey);
+
+  await doc.loadInfo();
+  const sheet = doc.sheetsByIndex[0];
+  const rows = await sheet.getRows();
+
+  rows.forEach(e=>{
+    user[e.userId] = {
+      "name": e.name,
+      "telegramId": e.chatId
+    }
+  })
+
+}
+
+
+reloadUserList();
