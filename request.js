@@ -1,56 +1,69 @@
-const request = require("request");
+var CronJob = require("cron").CronJob;
 
-const cookie = "youCookie=whrs=whrs&eventid=1";
-const url = "https://familyweb.wistron.com/whrs/temperature_addnew_act.aspx";
-const j = request.jar();
+// telegram settings
+const TelegramBot = require("node-telegram-bot-api");
+const token = "1062087849:AAFnz4p26ac3DsjPXEDh0fvMiahQjEZQRS8";
+const bot = new TelegramBot(token, { polling: true });
+const telegramId = []
 
-const moment = require("moment-timezone");
 
-headers = {
-  Cookie: "",
-  Origin: "https://familyweb.wistron.com",
-  Referer: "https://familyweb.wistron.com/whrs/temperature.aspx",
-  "Upgrade-Insecure-Requests": 1
+user = {
+  "10610150": {
+    "name": "宗家榮",
+    "telegramId": null
+  },
+  "10511141": {
+    "name": "林應凱",
+    "telegramId": null
+  },
+  "10602105": {
+    "name": "盧建廷",
+    "telegramId": null
+  },
+  "10506120": {
+    "name": "杜承浩", 
+    "telegramId": null
+  }
 };
 
-form = {
-  survey: 0,
-  empid: null,
-  eventid: 1,
-  trip: 1,
-  travel: 1,
-  notice: 1,
-  measure_date: null, //like '2020/3/11'
-  symptom: 1
-};
+// run the job everyday at 8 a.m.
+var job = new CronJob(
+  "0 8  * * *",
+  function () {
+    Object.keys(user).forEach(e => {
+      // console.log(e)
+      const req = require("./request.js");
+      req.autofill(e, user[e].name).then(res => {
+        bot.sendMessage(user[e].telegramId, res);
+      });
+    })
 
-// for fiddler fetch info
-// process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+  },
+  null,
+  true,
+  "Asia/Taipei"
+);
 
-exports.autofill = (userid, usernm) => new Promise((res, rej) => {
-  try {
-    headers["Cookie"] = cookie + "&empid=" + userid + "&name=" + encodeURI(usernm);
-    const dateToFill = moment()
-    .tz("Asia/Taipei")
-    .format("YYYY/MM/DD");
-    form["measure_date"] = dateToFill
-    form["empid"] = userid;
+job.start();
 
-    request.post(
-      {
-        url: url,
-        jar: j,
-        form: form,
-        headers: headers
-        // proxy: "http://127.0.0.1:8888" // for fiddler
-      },
-      function (err, resp, body) {
-        // resp_msg = body
-        resp_msg = body.split`('`[1].split`')`[0];
-        res(`[${dateToFill}] (${userid}:${usernm}) ${resp_msg}`);
-      }
-    );
-  } catch (err) {
-    rej(err);
+bot.onText(/\/start/, (msg) => {
+  bot.sendMessage(msg.chat.id, "Please enter the empid to add yourself in daily job and check status");
+});
+
+bot.onText(/\d{8}/, (msg) => {
+  const message = msg.text
+
+  if (user[message].telegramId === null) {
+    user[message].telegramId = msg.chat.id
+    bot.sendMessage(msg.chat.id, "Add ( empid: " + message + " , name: " + user[message].name + " ) in Daily Job");
+  }
+
+  if (user[message] !== undefined) {
+    const req = require("./request.js");
+    req.autofill(message, user[message].name).then(res => {
+      // console.log(res)
+      bot.sendMessage(msg.chat.id, res);
+    });
+    // if(telegramId.indexOf(msg.chat.id))
   }
 });
