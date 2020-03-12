@@ -29,12 +29,12 @@ var job = new CronJob(
 job.start();
 
 bot.onText(/\/echo (.+)/, (msg, match) => {
-  bot.sendMessage(telegramId, res);
+  bot.sendMessage(msg.chat.id, res);
   var message = match[1]
   if (user[message] !== undefined) {
     const req = require("./request.js");
     req.autofill(message, encodeURI(user[message])).then(res => {
-      bot.sendMessage(telegramId, res);
+      bot.sendMessage(msg.chat.id, res);
       // console.log(res)
     });
   }
