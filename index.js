@@ -6,6 +6,12 @@ const token = "1062087849:AAFnz4p26ac3DsjPXEDh0fvMiahQjEZQRS8";
 const bot = new TelegramBot(token, { polling: true });
 const telegramId = 1097526124;
 
+user = {
+  "10610150": "宗家榮",
+  "10511141": "黎奕宏",
+  "10602105": "盧建廷"
+};
+
 // run the job everyday at 8 a.m.
 var job = new CronJob(
   "0 8 * * *",
@@ -22,9 +28,12 @@ var job = new CronJob(
 
 job.start();
 
-bot.onText(/t/i, () => {
-  const req = require("./request.js");
-  req.autofill.then(res => {
-    bot.sendMessage(telegramId, res);
-  });
+bot.onText(/t/i, msg => {
+  if (user[msg] !== undefined) {
+    const req = require("./request.js");
+    req.autofill(msg, encodeURI(user[msg])).then(res => {
+      bot.sendMessage(telegramId, res);
+      // console.log(res)
+    });
+  }
 });
