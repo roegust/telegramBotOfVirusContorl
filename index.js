@@ -52,7 +52,7 @@ bot.onText(/\/start/, (msg) => {
 bot.onText(/\d{8}/, (msg) => {
   const message = msg.text
 
-  if (user[message].telegramId === null) {
+  if (user[message] !== undefined && user[message].telegramId === null) {
     user[message].telegramId = msg.chat.id
     bot.sendMessage(msg.chat.id, "Add ( empid: " + message + " , name: " + user[message].name + " ) in Daily Job");
   }
