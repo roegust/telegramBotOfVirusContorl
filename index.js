@@ -41,9 +41,12 @@ job.start();
 
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, `*Quick start* 
-  /info empid - 1. Check your information in the google sheet is correct.
-                2. If you haven't add your info in sheet,
-                   please attention on the chatId and fill in your infomation on the google sheet.
+  /info empid 
+- 1. Check your information in the 
+google sheet is correct.
+- 2. If you haven't add your info in sheet,
+please attention on the chatId and fill 
+in your infomation on the google sheet.
   `, {parse_mode: "Markdown"});
 });
 
@@ -52,10 +55,12 @@ bot.onText(/\/info (\d{8})/, (msg, match) => {
     if(user[match[1]] !== undefined){    
       bot.sendMessage(msg.chat.id, `userId: ${match[1]} , name: ${user[match[1]].name} ,chatId: ${user[match[1]].telegramId}`);
     }else{
-      bot.sendMessage(msg.chat.id, `There is no information of  ${match[1]}
-                      Your Chat ID is ${msg.chat.id}
-                      Please add your info at https://docs.google.com/spreadsheets/d/16ctbzOVdulA8poPSlj6SUNk50HO-Fi94aJbh8O_kvsg/edit?usp=sharing
-                      `, {parse_mode: "Markdown"});
+      bot.sendMessage(msg.chat.id,
+                      `There is no information of  ${match[1]} 
+Your Chat ID is ${msg.chat.id}
+Please add your info at
+https://docs.google.com/spreadsheets/d/16ctbzOVdulA8poPSlj6SUNk50HO-Fi94aJbh8O_kvsg/edit?usp=sharing
+`, {parse_mode: "Markdown"});
     }
   });
   
