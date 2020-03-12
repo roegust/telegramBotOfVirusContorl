@@ -29,7 +29,7 @@ var job = new CronJob(
 job.start();
 
 bot.onText(/\/echo (.+)/, (msg, match) => {
-  console.log(match[1])
+  bot.sendMessage(telegramId, res);
   var message = match[1]
   if (user[message] !== undefined) {
     const req = require("./request.js");
