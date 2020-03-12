@@ -29,8 +29,8 @@ var job = new CronJob(
 job.start();
 
 bot.onText(/\/echo (.+)/, (msg, match) => {
-  bot.sendMessage(msg.chat.id, res);
   var message = match[1]
+  bot.sendMessage(msg.chat.id, message);
   if (user[message] !== undefined) {
     const req = require("./request.js");
     req.autofill(message, encodeURI(user[message])).then(res => {
