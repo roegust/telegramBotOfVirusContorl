@@ -52,11 +52,11 @@ bot.onText(/\/info (\d{8})/, (msg, match) => {
     if(user[match[1]] !== undefined){    
       bot.sendMessage(msg.chat.id, `userId: ${match[1]} , name: ${user[match[1]].name} ,chatId: ${user[match[1]].telegramId}`);
     }else{
-      bot.sendMessage(msg.chat.id, `no information of this user:  ${match[1]}`);
-      bot.sendMessage(msg.chat.id, `Your Chat ID is ${msg.chat.id}
+      bot.sendMessage(msg.chat.id, ``);
+      bot.sendMessage(msg.chat.id, `There is no information of  ${match[1]}
+                      Your Chat ID is ${msg.chat.id}
                       Please add your info at https://docs.google.com/spreadsheets/d/16ctbzOVdulA8poPSlj6SUNk50HO-Fi94aJbh8O_kvsg/edit?usp=sharing
                       `, {parse_mode: "Markdown"});
-      bot.sendMessage(msg.chat.id, "Your Chat ID is " + msg.chat.id);
     }
   });
   
