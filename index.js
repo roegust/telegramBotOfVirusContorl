@@ -41,7 +41,7 @@ job.start();
 
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, `*Quick start* 
-  /info empid - check user information
+  /info empid - check user information`
 });
 
 bot.onText(/((\d{7,8}))/, (msg, match) => {
