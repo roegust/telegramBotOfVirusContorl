@@ -90,30 +90,12 @@ bot.onText(/\/info/, msg => {
   bot.sendMessage(msg.chat.id, "Please enter your employee ID");
 });
 
-bot.onText(/\/test/, (msg, match) => {
+bot.onText(/\/test/, (msg) => {
   reloadUserList().then(() => {
-    const message = match[1];
-
-    if (user["10610150"] !== undefined && user["10610150"].telegramId === null) {
-      user["10610150"].telegramId = 1097526124;
-      bot.sendMessage(
-        1097526124,
-        "Add ( empid: " +
-          message +
-          " , name: " +
-          user["10610150"].name +
-          " ) in Daily Job"
-      );
-    }
-
-    if (user["10610150"] !== undefined) {
-      const req = require("./request.js");
-      req.autofill(message, user["10610150"].name).then(res => {
+    req.autofill("10610150", user["10610150"].name).then(res => {
         // console.log(res)
         bot.sendMessage(1097526124, res);
       });
-      // if(telegramId.indexOf(msg.chat.id))
-    }
   });
 });
 
