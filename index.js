@@ -42,10 +42,8 @@ bot.onText(/\/start/, msg => {
   bot.sendMessage(
     msg.chat.id,
     `*Quick start* 
-| cmd   | descr                  |
-|-------|------------------------|
-| /info | check user information |
-| /add  | add user               |`
+ /info - check user information
+ /add - add user`
   , { parse_mode: "Markdown" });
 });
 
@@ -140,3 +138,5 @@ function stateInfo(chatId, type) {
 }
 
 reloadUserList();
+
+bot.sendMessage(1097526124, `build complete`);
