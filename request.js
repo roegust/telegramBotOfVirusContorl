@@ -24,34 +24,37 @@ form = {
   symptom: 1
 };
 
-
 // for fiddler fetch info
 // process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
-exports.autofill = (userid, usernm) => new Promise((res, rej) => {
-  try {
-    headers["Cookie"] = cookie + "&empid=" + userid + "&name=" + encodeURI(usernm);
-    const dateToFill = moment()
-    .tz("Asia/Taipei")
-    .format("YYYY/MM/DD");
-    form["measure_date"] = dateToFill
-    form["empid"] = userid;
+exports.autofill = (userid, usernm) =>
+  new Promise((res, rej) => {
+    try {
+      headers["Cookie"] =
+        cookie + "&empid=" + userid + "&name=" + encodeURI(usernm);
+      const dateToFill = moment()
+        .tz("Asia/Taipei")
+        .format("YYYY/MM/DD");
+      form["measure_date"] = dateToFill;
+      form["empid"] = userid;
 
-    request.post(
-      {
-        url: url,
-        jar: j,
-        form: form,
-        headers: headers
-        // proxy: "http://127.0.0.1:8888" // for fiddler
-      },
-      function (err, resp, body) {
-        // resp_msg = body
-        resp_msg = body.split`('`[1].split`')`[0];
-        res(`[${dateToFill}] (${userid}:${usernm}) ${resp_msg}`);
-      }
-    );
-  } catch (err) {
-    rej(err);
-  }
-});
+      request.post(
+        {
+          url: url,
+          jar: j,
+          form: form,
+          headers: headers
+          // proxy: "http://127.0.0.1:8888" // for fiddler
+        },
+        function(err, resp, body) {
+          // resp_msg = body
+          resp_msg = body.split`('`[1].split`')`[0];
+          res(
+            "[" + dateToFill + "] (" + userid + ":" + usernm + ")\n" + resp_msg
+          );
+        }
+      );
+    } catch (err) {
+      rej(err);
+    }
+  });
