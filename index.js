@@ -76,7 +76,8 @@ bot.onText(/\/add/, msg => {
     msg.chat.id,
     "Please add your info at https://docs.google.com/spreadsheets/d/16ctbzOVdulA8poPSlj6SUNk50HO-Fi94aJbh8O_kvsg/edit?usp=sharing"
   );
-  bot.sendMessage(msg.chat.id, "Your Chat ID is " + msg.chat.id);
+  bot.sendMessage(msg.chat.id, "Your chat ID is " + msg.chat.id);
+  bot.sendMessage(msg.chat.id, "Please copy your chat ID, you have to fill this in the sheet.");
 });
 
 bot.onText(/\/info/, msg => {
