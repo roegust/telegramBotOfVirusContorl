@@ -44,7 +44,7 @@ bot.onText(/\/start/, msg => {
     `*Quick start* 
   /info - check user information
   /add  - add user`
-  );
+  , { parse_mode: "Markdown" });
 });
 
 bot.onText(/((\d{7,8}))/, (msg, match) => {
