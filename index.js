@@ -43,7 +43,7 @@ bot.onText(/\/start/, msg => {
     msg.chat.id,
     `*Quick start* 
  /info - check user information
- /add - add user`
+ /add - add new user`
   , { parse_mode: "Markdown" });
 });
 
