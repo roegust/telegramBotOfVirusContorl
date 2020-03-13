@@ -31,8 +31,6 @@ var job = new CronJob(
         });
       })
     });
-
-
   },
   null,
   true,
@@ -78,9 +76,6 @@ bot.onText(/\/info/, (msg) => {
   bot.sendMessage(msg.chat.id, "Please enter your employee ID");
 });
 
-
-
-user
 bot.onText(/\/test (\[0-9]{8}|[0-9]{7})/, (msg, match) => {
 
   reloadUserList().then(() => {
@@ -119,7 +114,6 @@ async function reloadUserList() {
   })
 
 }
-
 
 function stateInfo(chatId, type) {
   return {
