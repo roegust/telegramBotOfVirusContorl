@@ -140,4 +140,4 @@ function stateInfo(chatId, type) {
 
 reloadUserList();
 
-bot.sendMessage(1097526124, `build complete`);
+bot.sendMessage(1097526124, `service was rebuilt complete`);
