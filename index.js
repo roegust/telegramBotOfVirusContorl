@@ -42,8 +42,10 @@ bot.onText(/\/start/, msg => {
   bot.sendMessage(
     msg.chat.id,
     `*Quick start* 
-  /info - check user information
-  /add - add user`
+| cmd   | descr                  |
+|-------|------------------------|
+| /info | check user information |
+| /add  | add user               |`
   , { parse_mode: "Markdown" });
 });
 
