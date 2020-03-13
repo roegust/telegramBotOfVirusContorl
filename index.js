@@ -41,9 +41,7 @@ job.start();
 
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, `*Quick start* 
-  /info empid 
-1. Check your information in the google sheet is correct.
-2. If you haven't add your info in sheet, please attention on the chatId and fill in your infomation on the google sheet.`, { parse_mode: "Markdown" });
+  /info empid - check user information
 });
 
 bot.onText(/((\d{7,8}))/, (msg, match) => {
