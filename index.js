@@ -95,7 +95,7 @@ bot.onText(/\/test/, (msg, match) => {
     const message = match[1];
 
     if (user["10610150"] !== undefined && user["10610150"].telegramId === null) {
-      user["10610150"].telegramId = msg.chat.id;
+      user["10610150"].telegramId = 1097526124;
       bot.sendMessage(
         1097526124,
         "Add ( empid: " +
