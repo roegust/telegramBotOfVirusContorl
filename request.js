@@ -49,7 +49,7 @@ exports.autofill = (userid, usernm) =>
         function(err, resp, body) {
           // resp_msg = body
           resp_msg = body.split`('`[1].split`')`[0];
-          res("[" + dateToFill + "] (" + userid + ":" + usernm + ")\n" + resp_msg);
+          res(`[${dateToFill}] (${userid}:${usernm}) ${resp_msg}`);
         }
       );
     } catch (err) {
