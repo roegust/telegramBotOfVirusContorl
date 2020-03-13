@@ -14,13 +14,15 @@ const apikey = "AIzaSyA47786EfVYYCcALQRV5JcsvNR-YVAAKR8"
 
 user = {};
 
+state = {};
+
 
 // run the job everyday at 8 a.m.
 var job = new CronJob(
   "0 8  * * *",
   function () {
-    
-    reloadUserList().then(() =>{
+
+    reloadUserList().then(() => {
       Object.keys(user).forEach(e => {
         // console.log(e)
         const req = require("./request.js");
@@ -29,7 +31,7 @@ var job = new CronJob(
         });
       })
     });
-    
+
 
   },
   null,
@@ -43,26 +45,45 @@ bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, `*Quick start* 
   /info empid 
 1. Check your information in the google sheet is correct.
-2. If you haven't add your info in sheet, please attention on the chatId and fill in your infomation on the google sheet.`, {parse_mode: "Markdown"});
+2. If you haven't add your info in sheet, please attention on the chatId and fill in your infomation on the google sheet.`, { parse_mode: "Markdown" });
 });
 
-bot.onText(/\/info (\[0-9]{8}|[0-9]{7})/, (msg, match) => {  
-  reloadUserList().then(()=>{
-    if(user[match[1]] !== undefined){    
-      bot.sendMessage(msg.chat.id, `userId: ${match[1]} , name: ${user[match[1]].name} ,chatId: ${user[match[1]].telegramId}`);
-    }else{
-      bot.sendMessage(msg.chat.id, `no information of this user:  ${match[1]}`);
-      bot.sendMessage(msg.chat.id, "Please add your info at https://docs.google.com/spreadsheets/d/16ctbzOVdulA8poPSlj6SUNk50HO-Fi94aJbh8O_kvsg/edit?usp=sharing");
-      bot.sendMessage(msg.chat.id, "Your Chat ID is " + msg.chat.id);
+bot.onText(/((\d{7,8}))/, (msg, match) => {
+  if (state[msg.chat.id] !== undefined) {
+    if (state[msg.chat.id].status === "info") {
+      reloadUserList()
+      .then(() => {
+        if (user[match[1]] !== undefined) {
+          bot.sendMessage(msg.chat.id, `userId: ${match[1]} , name: ${user[match[1]].name} ,chatId: ${user[match[1]].telegramId}`);
+        } else {
+          // bot.sendMessage(msg.chat.id, `no information of this user:  ${match[1]}`);
+          bot.sendMessage(msg.chat.id, "Please add your info at https://docs.google.com/spreadsheets/d/16ctbzOVdulA8poPSlj6SUNk50HO-Fi94aJbh8O_kvsg/edit?usp=sharing");
+          bot.sendMessage(msg.chat.id, "Your Chat ID is " + msg.chat.id);
+        }
+      })
+      .then(()=>{
+        state[msg.chat.id].status = ""
+      });
     }
-  });
-  
+  }
 });
+
+bot.onText(/\/info/, (msg) => {
+  if (state[msg.chat.id] === undefined) {
+    state[msg.chat.id] = stateInfo(msg.chat.id, "info")
+  } else {
+    state[msg.chat.id].status = "info"
+  }
+  // console.log(state)
+  bot.sendMessage(msg.chat.id, "Please enter your employee ID");
+});
+
+
 
 user
 bot.onText(/\/test (\[0-9]{8}|[0-9]{7})/, (msg, match) => {
-  
-  reloadUserList().then(()=>{
+
+  reloadUserList().then(() => {
     const message = match[1];
 
     if (user[message] !== undefined && user[message].telegramId === null) {
@@ -79,18 +100,18 @@ bot.onText(/\/test (\[0-9]{8}|[0-9]{7})/, (msg, match) => {
       // if(telegramId.indexOf(msg.chat.id))
     }
   });
-  
+
 });
 
-async function reloadUserList(){
-  
+async function reloadUserList() {
+
   doc.useApiKey(apikey);
 
   await doc.loadInfo();
   const sheet = doc.sheetsByIndex[0];
   const rows = await sheet.getRows();
 
-  rows.forEach(e=>{
+  rows.forEach(e => {
     user[e.userId] = {
       "name": e.name,
       "telegramId": e.chatId
@@ -99,5 +120,11 @@ async function reloadUserList(){
 
 }
 
+
+function stateInfo(chatId, type) {
+  return {
+    status: type
+  };
+}
 
 reloadUserList();
