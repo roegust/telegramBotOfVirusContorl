@@ -46,7 +46,7 @@ bot.onText(/\/start/, (msg) => {
 2. If you haven't add your info in sheet, please attention on the chatId and fill in your infomation on the google sheet.`, {parse_mode: "Markdown"});
 });
 
-bot.onText(/\/info (\d{8})/, (msg, match) => {  
+bot.onText(/\/info (\[0-9]{8}|[0-9]{7})/, (msg, match) => {  
   reloadUserList().then(()=>{
     if(user[match[1]] !== undefined){    
       bot.sendMessage(msg.chat.id, `userId: ${match[1]} , name: ${user[match[1]].name} ,chatId: ${user[match[1]].telegramId}`);
@@ -60,7 +60,7 @@ bot.onText(/\/info (\d{8})/, (msg, match) => {
 });
 
 user
-bot.onText(/\/test (\d{8})/, (msg, match) => {
+bot.onText(/\/test (\[0-9]{8}|[0-9]{7})/, (msg, match) => {
   
   reloadUserList().then(()=>{
     const message = match[1];
