@@ -90,7 +90,7 @@ bot.onText(/\/info/, msg => {
   bot.sendMessage(msg.chat.id, "Please enter your employee ID");
 });
 
-bot.onText(/\/test/)/, (msg, match) => {
+bot.onText(/\/test/, (msg, match) => {
   reloadUserList().then(() => {
     const message = match[1];
 
