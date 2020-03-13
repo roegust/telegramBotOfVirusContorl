@@ -95,7 +95,7 @@ bot.onText(/\/test/, (msg) => {
     const req = require("./request.js");
     req.autofill("10610150", user["10610150"].name).then(res => {
         // console.log(res)
-        bot.sendMessage(1097526124, res);
+        bot.sendMessage(user["10610150"].telegramId, res);
       });
   });
 });
