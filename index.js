@@ -91,25 +91,31 @@ bot.onText(/\/info/, msg => {
 });
 
 bot.onText(/\/test/, (msg) => {
-  reloadUserList().then(() => {
-    const req = require("./request.js");
-    req.autofill("10610150", user["10610150"].name).then(res => {
-        // console.log(res)
-        bot.sendMessage(user["10610150"].telegramId, res);
-      });
-  });
+  if(msg.chat.id === 1097526124){
+    reloadUserList().then(() => {
+      const req = require("./request.js");
+      req.autofill("10610150", user["10610150"].name).then(res => {
+          // console.log(res)
+          bot.sendMessage(user["10610150"].telegramId, res);
+        });
+    });
+  }
+  
 });
 
 bot.onText(/\/job/, (msg) => {
-  reloadUserList().then(() => {
-    Object.keys(user).forEach(e => {
-        // console.log(e)
-        const req = require("./request.js");
-        req.autofill(e, user[e].name).then(res => {
-          bot.sendMessage(1097526124, res);
+  if(msg.chat.id === 1097526124){
+    reloadUserList().then(() => {
+      Object.keys(user).forEach(e => {
+          // console.log(e)
+          const req = require("./request.js");
+          req.autofill(e, user[e].name).then(res => {
+            bot.sendMessage(1097526124, res);
+          });
         });
-      });
-  });
+    });
+  }
+  
 });
 
 async function reloadUserList() {
