@@ -21,13 +21,11 @@ state = {};
 var job = new CronJob(
   "0 8  * * *",
   function() {
-    reloadUserList().then(() => {
-      Object.keys(user).forEach(e => {
-        // console.log(e)
-        const req = require("./request.js");
-        req.autofill(e, user[e].name).then(res => {
-          bot.sendMessage(user[e].telegramId, res);
-        });
+    Object.keys(user).forEach(e => {
+      // console.log(e)
+      const req = require("./request.js");
+      req.autofill(e, user[e].name).then(res => {
+        bot.sendMessage(user[e].telegramId, res);
       });
     });
   },
@@ -43,8 +41,9 @@ bot.onText(/\/start/, msg => {
     msg.chat.id,
     `*Quick start* 
  /info - check user information
- /add - add new user`
-  , { parse_mode: "Markdown" });
+ /add - add new user`,
+    { parse_mode: "Markdown" }
+  );
 });
 
 bot.onText(/((\d{7,8}))/, (msg, match) => {
@@ -59,9 +58,15 @@ bot.onText(/((\d{7,8}))/, (msg, match) => {
                 user[match[1]].telegramId
               }`
             );
-            bot.sendMessage(msg.chat.id, `user: ${match[1]} is already add in daily job`);
+            bot.sendMessage(
+              msg.chat.id,
+              `user: ${match[1]} is already add in daily job`
+            );
           } else {
-             bot.sendMessage(msg.chat.id, `no information of userid:  ${match[1]}`);
+            bot.sendMessage(
+              msg.chat.id,
+              `no information of userid:  ${match[1]}`
+            );
           }
         })
         .then(() => {
@@ -77,7 +82,10 @@ bot.onText(/\/add/, msg => {
     "Please add your info at https://docs.google.com/spreadsheets/d/16ctbzOVdulA8poPSlj6SUNk50HO-Fi94aJbh8O_kvsg/edit?usp=sharing"
   );
   bot.sendMessage(msg.chat.id, "Your chat ID is " + msg.chat.id);
-  bot.sendMessage(msg.chat.id, "Please copy your chat ID, you have to fill this in the sheet.");
+  bot.sendMessage(
+    msg.chat.id,
+    "Please copy your chat ID, you have to fill this in the sheet."
+  );
 });
 
 bot.onText(/\/info/, msg => {
@@ -90,32 +98,32 @@ bot.onText(/\/info/, msg => {
   bot.sendMessage(msg.chat.id, "Please enter your employee ID");
 });
 
-bot.onText(/\/test/, (msg) => {
-  if(msg.chat.id === 1097526124){
-    reloadUserList().then(() => {
-      const req = require("./request.js");
-      req.autofill("10610150", user["10610150"].name).then(res => {
-          // console.log(res)
-          bot.sendMessage(user["10610150"].telegramId, res);
-        });
+bot.onText(/\/test/, msg => {
+  if (msg.chat.id === 1097526124) {
+    const req = require("./request.js");
+    req.autofill("10610150", user["10610150"].name).then(res => {
+      // console.log(res)
+      bot.sendMessage(user["10610150"].telegramId, res);
     });
   }
-  
 });
 
-bot.onText(/\/job/, (msg) => {
-  if(msg.chat.id === 1097526124){
-    reloadUserList().then(() => {
-      Object.keys(user).forEach(e => {
-          // console.log(e)
-          const req = require("./request.js");
-          req.autofill(e, user[e].name).then(res => {
-            bot.sendMessage(1097526124, res);
-          });
-        });
+bot.onText(/\/job/, msg => {
+  if (msg.chat.id === 1097526124) {
+    Object.keys(user).forEach(e => {
+      // console.log(e)
+      const req = require("./request.js");
+      req.autofill(e, user[e].name).then(res => {
+        bot.sendMessage(1097526124, res);
+      });
     });
   }
-  
+});
+
+bot.onText(/\/reload/, msg => {
+  reloadUserList().then(() => {
+    bot.sendMessage(msg.chat.id, "Reload user complete");
+  });
 });
 
 async function reloadUserList() {
