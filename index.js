@@ -35,7 +35,7 @@ var job = new CronJob(
 );
 
 job.start();
-console.log(job.nextDates(5));
+console.log(job.nextDates(2));
 
 bot.onText(/\/start/, msg => {
   bot.sendMessage(
