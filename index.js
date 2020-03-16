@@ -19,7 +19,7 @@ state = {};
 
 // run the job everyday at 8 a.m.
 var job = new CronJob(
-  "0 8  * * *",
+  "0 0 8,9 ? * * *",
   function() {
     Object.keys(user).forEach(e => {
       // console.log(e)
@@ -35,6 +35,7 @@ var job = new CronJob(
 );
 
 job.start();
+job.nextDates(5);
 
 bot.onText(/\/start/, msg => {
   bot.sendMessage(
