@@ -162,9 +162,9 @@ async function jobForSubmit() {
   asyncForEach(array, async e => {
     await setTimeout(()=>{
       console.log(e, user[e].name)
-//       req.autofill(e, user[e].name).then(res => {
-//           bot.sendMessage(1097526124, res);
-//         });
+      await req.autofill(e, user[e].name).then(res => {
+          bot.sendMessage(1097526124, res);
+        });
     }, 2000)
 
   });
