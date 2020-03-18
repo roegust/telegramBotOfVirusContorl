@@ -5,6 +5,7 @@ const TelegramBot = require("node-telegram-bot-api");
 const token = "1062087849:AAFnz4p26ac3DsjPXEDh0fvMiahQjEZQRS8";
 const bot = new TelegramBot(token, { polling: true });
 
+
 //googlesheet setting
 
 const { GoogleSpreadsheet } = require("google-spreadsheet");
@@ -162,8 +163,8 @@ async function jobForSubmit() {
   asyncForEach(array, async e => {
     await setTimeout(()=>{
       console.log(e, user[e].name)
-      req.autofill(e, user[e].name).then(res => {
-          bot.sendMessage(1097526124, res);
+      req.autofill(e, user[e].name).then( async (res) => {
+          await bot.sendMessage(1097526124, res);
         });
     }, 2000)
 
