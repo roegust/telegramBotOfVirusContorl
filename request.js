@@ -31,7 +31,7 @@ form = {
 exports.autofill = (userid, usernm) =>
   new Promise((res, rej) => {
     try {
-      setData(userid).then(() => {
+      setData(userid).then(dateToFill => {
         request.post(
           {
             url: url,
@@ -42,6 +42,7 @@ exports.autofill = (userid, usernm) =>
           },
           function(err, resp, body) {
             // resp_msg = body
+            console.log(body)
             resp_msg = body.split`('`[1].split`')`[0];
             res(
               "[" +
@@ -69,4 +70,6 @@ async function setData(userid) {
     .format("YYYY/MM/DD");
   form["measure_date"] = dateToFill;
   form["empid"] = userid;
+
+  return dateToFill;
 }
