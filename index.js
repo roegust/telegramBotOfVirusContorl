@@ -5,6 +5,9 @@ const TelegramBot = require("node-telegram-bot-api");
 const token = "1062087849:AAFnz4p26ac3DsjPXEDh0fvMiahQjEZQRS8";
 const bot = new TelegramBot(token, { polling: true });
 
+// rxjs 
+const rxjs = require("rxjs");
+const rxjs_op = require("rxjs/operators");
 
 //googlesheet setting
 
@@ -16,18 +19,24 @@ const apikey = "AIzaSyA47786EfVYYCcALQRV5JcsvNR-YVAAKR8";
 
 user = {};
 
+
 state = {};
 
 // run the job everyday at 8 a.m.
 var job = new CronJob(
-  " 0,5 8,9 * * *",
-  function() {
-    Object.keys(user).forEach(e => {
-      // console.log(e)
-      const req = require("./request.js");
-      req.autofill(e, user[e].name).then(res => {
-        bot.sendMessage(user[e].telegramId, res);
-      });
+  " 0,5 8 * * *",
+  async function () {
+    await loadUserList()
+    const userid = Object.keys(user);
+    const req = require("./request.js");
+    const result = rxjs.from(userid).pipe(rxjs_op.concatMap((item) => rxjs.of(item).pipe(rxjs_op.delay(2000))))
+    const example = result.pipe(
+      rxjs_op.mergeMap((item) =>
+        req.autofill(item, user[item].name)
+      )
+    )
+    example.subscribe((res) => {
+      bot.sendMessage(user[res.userid].telegramId, res.response);
     });
   },
   null,
@@ -51,13 +60,13 @@ bot.onText(/\/start/, msg => {
 bot.onText(/((\d{7,8}))/, (msg, match) => {
   if (state[msg.chat.id] !== undefined) {
     if (state[msg.chat.id].status === "info") {
-      reloadUserList()
+      loadUserList()
         .then(() => {
           if (user[match[1]] !== undefined) {
             bot.sendMessage(
               msg.chat.id,
               `userId: ${match[1]} , name: ${user[match[1]].name} ,chatId: ${
-                user[match[1]].telegramId
+              user[match[1]].telegramId
               }`
             );
             bot.sendMessage(
@@ -92,7 +101,7 @@ bot.onText(/\/add/, msg => {
 
 bot.onText(/\/info/, msg => {
   if (state[msg.chat.id] === undefined) {
-    state[msg.chat.id] = stateInfo(msg.chat.id, "info");
+    state[msg.chat.id] = stateInfo("info");
   } else {
     state[msg.chat.id].status = "info";
   }
@@ -102,35 +111,42 @@ bot.onText(/\/info/, msg => {
 
 bot.onText(/\/test/, msg => {
   if (msg.chat.id === 1097526124) {
-    const req = require("./request.js");
+    // const req = require("./request.js");
     req.autofill("10610150", user["10610150"].name).then(res => {
       // console.log(res)
-      bot.sendMessage(user["10610150"].telegramId, res);
+      bot.sendMessage(user["10610150"].telegramId, res.response);
     });
   }
 });
 
-bot.onText(/\/job/, msg => {
-  if (msg.chat.id === 1097526124) {
-    jobForSubmit();
-    // asyncForEach(Object.keys(user));
-    // Object.keys(user).forEach(e => {
-    //   // console.log(e)
-    //   const req = require("./request.js");
-    //   req.autofill(e, user[e].name).then(res => {
-    //     bot.sendMessage(1097526124, res);
-    //   });
-    // });
-  }
-});
 
 bot.onText(/\/reload/, msg => {
-  reloadUserList().then(() => {
+  loadUserList().then(() => {
     bot.sendMessage(msg.chat.id, "Reload user complete");
   });
 });
 
-async function reloadUserList() {
+bot.onText(/\/rxjs/, async msg => {
+  await loadUserList()
+  const userid = Object.keys(user);
+  const req = require("./request.js");
+  const result = rxjs.from(userid).pipe(rxjs_op.concatMap((item) => rxjs.of(item).pipe(rxjs_op.delay(2000))))
+  const example = result.pipe(
+    rxjs_op.mergeMap((item) =>
+      req.autofill(item, user[item].name)
+      // return rxjs.from(prom)
+    )
+  )
+  example.subscribe((res) => {
+    // console.log(res.userid)
+    // console.log(res.response)
+    bot.sendMessage(user[res.userid].telegramId, res.response);
+  });
+})
+
+
+
+async function loadUserList() {
   doc.useApiKey(apikey);
 
   await doc.loadInfo();
@@ -142,35 +158,18 @@ async function reloadUserList() {
       name: e.name,
       telegramId: e.chatId
     };
-  });
+  })
 }
 
-function stateInfo(chatId, type) {
+function stateInfo(type) {
   return {
     status: type
   };
 }
 
-async function asyncForEach(array, callback) {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
-  }
-}
 
-async function jobForSubmit() {
-  var array = Object.keys(user);
-  const req = require("./request.js");
-  asyncForEach(array, async e => {
-    await setTimeout(()=>{
-      console.log(e, user[e].name)
-      req.autofill(e, user[e].name).then( async (res) => {
-          await bot.sendMessage(1097526124, res);
-        });
-    }, 2000)
+loadUserList()
 
-  });
-}
+// loadUserList();
 
-reloadUserList();
-
-bot.sendMessage(1097526124, `service was rebuilt complete`);
+// bot.sendMessage(1097526124, `service was rebuilt complete`);

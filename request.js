@@ -40,19 +40,22 @@ exports.autofill = (userid, usernm) =>
             headers: headers
             // proxy: "http://127.0.0.1:8888" // for fiddler
           },
-          function(err, resp, body) {
+          function (err, resp, body) {
             // resp_msg = body
-            console.log(body)
+            // console.log(body)
             resp_msg = body.split`('`[1].split`')`[0];
-            res(
-              "[" +
+            res({
+              response:
+                "[" +
                 dateToFill +
                 "] (" +
                 userid +
                 ":" +
                 usernm +
                 ")\n" +
-                resp_msg
+                resp_msg,
+              userid: userid
+            }
             );
           }
         );
