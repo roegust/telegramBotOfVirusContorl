@@ -19,7 +19,7 @@ state = {};
 
 // run the job everyday at 8 a.m.
 var job = new CronJob(
-  " 0 8,9 * * *",
+  " 0,5 8,9 * * *",
   function() {
     Object.keys(user).forEach(e => {
       // console.log(e)
