@@ -111,7 +111,7 @@ bot.onText(/\/test/, msg => {
 
 bot.onText(/\/job/, msg => {
   if (msg.chat.id === 1097526124) {
-    test();
+    jobForSubmit();
     // asyncForEach(Object.keys(user));
     // Object.keys(user).forEach(e => {
     //   // console.log(e)
@@ -156,18 +156,16 @@ async function asyncForEach(array, callback) {
   }
 }
 
-async function test() {
+async function jobForSubmit() {
   var array = Object.keys(user);
-  asyncForEach(array, async x => {
-    setTimeout(()=>{
-      console.log(x);
+  const req = require("./request.js");
+  asyncForEach(array, async e => {
+    await setTimeout(()=>{
+      await req.autofill(e, user[e].name).then(res => {
+          bot.sendMessage(1097526124, res);
+        });
     }, 2000)
 
-    // const req = require("./request.js");
-    // await req.autofill(, user[e].name).then(res => {
-    //   bot.sendMessage(1097526124, res);
-    // });
-    // console.log(res);
   });
 }
 
