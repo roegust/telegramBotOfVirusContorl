@@ -31,7 +31,7 @@ form = {
 exports.autofill = (userid, usernm) =>
   new Promise((res, rej) => {
     try {
-      setData(userid).then(dateToFill => {
+      setData(userid, usernm).then(dateToFill => {
         request.post(
           {
             url: url,
@@ -62,7 +62,7 @@ exports.autofill = (userid, usernm) =>
     }
   });
 
-async function setData(userid) {
+async function setData(userid, usernm) {
   headers["Cookie"] =
     cookie + "&empid=" + userid + "&name=" + encodeURI(usernm);
   const dateToFill = await moment()
