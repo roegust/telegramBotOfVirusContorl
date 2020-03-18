@@ -159,7 +159,9 @@ async function asyncForEach(array, callback) {
 async function test() {
   var array = Object.keys(user);
   asyncForEach(array, async x => {
-    console.log(x);
+    setTimeout(()=>{
+      console.log(x);
+    }, 2000)
 
     // const req = require("./request.js");
     // await req.autofill(, user[e].name).then(res => {
