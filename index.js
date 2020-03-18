@@ -111,13 +111,15 @@ bot.onText(/\/test/, msg => {
 
 bot.onText(/\/job/, msg => {
   if (msg.chat.id === 1097526124) {
-    Object.keys(user).forEach(e => {
-      // console.log(e)
-      const req = require("./request.js");
-      req.autofill(e, user[e].name).then(res => {
-        bot.sendMessage(1097526124, res);
-      });
-    });
+    test();
+    // asyncForEach(Object.keys(user));
+    // Object.keys(user).forEach(e => {
+    //   // console.log(e)
+    //   const req = require("./request.js");
+    //   req.autofill(e, user[e].name).then(res => {
+    //     bot.sendMessage(1097526124, res);
+    //   });
+    // });
   }
 });
 
@@ -146,6 +148,25 @@ function stateInfo(chatId, type) {
   return {
     status: type
   };
+}
+
+async function asyncForEach(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+}
+
+async function test() {
+  var array = Object.keys(user);
+  asyncForEach(array, async x => {
+    console.log(x);
+
+    // const req = require("./request.js");
+    // await req.autofill(, user[e].name).then(res => {
+    //   bot.sendMessage(1097526124, res);
+    // });
+    // console.log(res);
+  });
 }
 
 reloadUserList();
