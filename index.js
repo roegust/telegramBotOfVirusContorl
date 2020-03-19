@@ -29,13 +29,13 @@ var job = new CronJob(
     await loadUserList()
     const userid = Object.keys(user);
     const req = require("./request.js");
-    const result = rxjs.from(userid).pipe(rxjs_op.concatMap((item) => rxjs.of(item).pipe(rxjs_op.delay(2000))))
-    const example = result.pipe(
+    const getUser = rxjs.from(userid).pipe(rxjs_op.concatMap((item) => rxjs.of(item).pipe(rxjs_op.delay(2000))))
+    const result = getUser.pipe(
       rxjs_op.mergeMap((item) =>
         req.autofill(item, user[item].name)
       )
     )
-    example.subscribe((res) => {
+    result.subscribe((res) => {
       bot.sendMessage(user[res.userid].telegramId, res.response);
     });
   },
