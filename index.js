@@ -24,7 +24,7 @@ state = {};
 
 // run the job everyday at 8 a.m.
 var job = new CronJob(
-  " 0,5 8 * * *",
+  " 0,30 8 * * *",
   async function () {
     await loadUserList()
     const userid = Object.keys(user);
