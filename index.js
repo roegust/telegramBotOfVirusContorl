@@ -132,13 +132,8 @@ bot.onText(/\/apit/, msg => {
         chatid: "444"
       }
     },
-    function(err, res, body) {
-      if (error) {
-        console.error(error)
-        return
-      }
-      console.log(`statusCode: ${res.statusCode}`)
-      console.log(body)
+    function(res) {      
+      console.log(res)
     }
   );
 });
