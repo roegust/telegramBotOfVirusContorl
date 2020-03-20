@@ -89,20 +89,46 @@ bot.onText(/((\d{7,8}))/, (msg, match) => {
   }
 });
 
-bot.onText(/(\d{7,8})(\ )(.+)/, (msg, match) => {
-  console.log(match[1], match[3])
+bot.onText(/(\d{7,8})(\ )(.+)/, async (msg, match) => {
+  console.log(match[1], match[3]);
+  if (state[msg.chat.id] !== undefined) {
+    if (state[msg.chat.id].status === "add") {
+      await request.post(
+        {
+          url:
+            "https://script.google.com/macros/s/AKfycbxcqmLhGC1Njn0vxJfvFpIfQaY81xMZmUU-3H9IgE7NpUiW7hR2/exec",
+          followAllRedirects: true,
+          form: {
+            userid: "222",
+            name: "333",
+            chatid: "444"
+          }
+        },
+        (error, res, body) => {
+          if (error) {
+            console.error(error);
+            return;
+          }
+          console.log(`statusCode: ${res.statusCode}`);
+          //       console.log(res);
+        }
+      );
+    }
+  }
 });
 
 bot.onText(/\/add/, msg => {
-  bot.sendMessage(
-    msg.chat.id,
-    "Please add your info at https://docs.google.com/spreadsheets/d/16ctbzOVdulA8poPSlj6SUNk50HO-Fi94aJbh8O_kvsg/edit?usp=sharing"
-  );
-  bot.sendMessage(msg.chat.id, "Your chat ID is " + msg.chat.id);
-  bot.sendMessage(
-    msg.chat.id,
-    "Please copy your chat ID, you have to fill this in the sheet."
-  );
+  if (state[msg.chat.id] === undefined) {
+    state[msg.chat.id] = stateInfo("add");
+  } else {
+    state[msg.chat.id].status = "add";
+  }
+  // bot.sendMessage(
+  //   msg.chat.id,
+  //   "Please add your info at https://docs.google.com/spreadsheets/d/16ctbzOVdulA8poPSlj6SUNk50HO-Fi94aJbh8O_kvsg/edit?usp=sharing"
+  // );
+  // bot.sendMessage(msg.chat.id, "Your chat ID is " + msg.chat.id);
+  bot.sendMessage(msg.chat.id, "Please enter your .");
 });
 
 bot.onText(/\/info/, msg => {
@@ -142,7 +168,7 @@ bot.onText(/\/apit/, msg => {
         return;
       }
       console.log(`statusCode: ${res.statusCode}`);
-//       console.log(res);
+      //       console.log(res);
     }
   );
 });
