@@ -125,6 +125,7 @@ bot.onText(/\/apit/, msg => {
     {
       url:
         "https://script.google.com/macros/s/AKfycbxcqmLhGC1Njn0vxJfvFpIfQaY81xMZmUU-3H9IgE7NpUiW7hR2/exec",
+      followAllRedirects: true,
       form: {
         userid: "222",
         name: "333",
