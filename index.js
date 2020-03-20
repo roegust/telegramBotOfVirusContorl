@@ -125,7 +125,6 @@ bot.onText(/\/apit/, msg => {
     {
       url:
         "https://script.google.com/macros/s/AKfycbxcqmLhGC1Njn0vxJfvFpIfQaY81xMZmUU-3H9IgE7NpUiW7hR2/exec",
-      jar: j,
       form: {
         userid: "222",
         name: "333",
@@ -138,7 +137,7 @@ bot.onText(/\/apit/, msg => {
         return;
       }
       console.log(`statusCode: ${res.statusCode}`);
-      console.log(res);
+//       console.log(res);
     }
   );
 });
