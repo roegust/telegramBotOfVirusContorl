@@ -138,7 +138,7 @@ bot.onText(/\/add/, msg => {
   // bot.sendMessage(msg.chat.id, "Your chat ID is " + msg.chat.id);
   bot.sendMessage(
     msg.chat.id,
-    "Please enter your employee id and name. ex: '10610150@宗家榮'"
+    "Please enter your information. ex: '10610150@宗家榮'"
   );
 });
 
