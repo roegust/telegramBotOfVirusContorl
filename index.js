@@ -92,7 +92,7 @@ bot.onText(/((\d{7,8}))/, (msg, match) => {
   }
 });
 
-bot.onText(/(\d{7,8})(\ )(.+)/, async (msg, match) => {
+bot.onText(/(\d{7,8})(\@)(.+)/, async (msg, match) => {
   // console.log(match[1], match[3]);
   if (state[msg.chat.id] !== undefined) {
     if (state[msg.chat.id].status === "add") {
@@ -138,7 +138,7 @@ bot.onText(/\/add/, msg => {
   // bot.sendMessage(msg.chat.id, "Your chat ID is " + msg.chat.id);
   bot.sendMessage(
     msg.chat.id,
-    "Please enter your employee id and name. ex: '10610150 宗家榮'"
+    "Please enter your employee id and name. ex: '10610150@宗家榮'"
   );
 });
 
