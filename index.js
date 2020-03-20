@@ -26,7 +26,7 @@ state = {};
 
 // run the job everyday at 8 a.m.
 var job = new CronJob(
-  " 0,30 8 * * *",
+  " 0 8 * * *",
   async function() {
     await loadUserList();
     const userid = Object.keys(user);
@@ -93,7 +93,7 @@ bot.onText(/((\d{7,8}))/, (msg, match) => {
 });
 
 bot.onText(/(\d{7,8})(\ )(.+)/, async (msg, match) => {
-  console.log(match[1], match[3]);
+  // console.log(match[1], match[3]);
   if (state[msg.chat.id] !== undefined) {
     if (state[msg.chat.id].status === "add") {
       if (user[match[1]] === undefined) {
@@ -160,28 +160,6 @@ bot.onText(/\/test/, msg => {
       bot.sendMessage(user["10610150"].telegramId, res.response);
     });
   }
-});
-bot.onText(/\/apit/, msg => {
-  request.post(
-    {
-      url:
-        "https://script.google.com/macros/s/AKfycbxcqmLhGC1Njn0vxJfvFpIfQaY81xMZmUU-3H9IgE7NpUiW7hR2/exec",
-      followAllRedirects: true,
-      form: {
-        userid: "222",
-        name: "333",
-        chatid: "444"
-      }
-    },
-    (error, res, body) => {
-      if (error) {
-        console.error(error);
-        return;
-      }
-      console.log(`statusCode: ${res.statusCode}`);
-      //       console.log(res);
-    }
-  );
 });
 
 bot.onText(/\/reload/, async msg => {
