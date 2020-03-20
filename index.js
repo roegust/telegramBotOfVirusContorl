@@ -122,9 +122,10 @@ bot.onText(/\/test/, msg => {
 });
 bot.onText(/\/apit/, msg => {
   request.post(
-    "https://script.google.com/macros/s/AKfycbxcqmLhGC1Njn0vxJfvFpIfQaY81xMZmUU-3H9IgE7NpUiW7hR2/exec",
     {
-      json: {
+      url:
+        "https://script.google.com/macros/s/AKfycbxcqmLhGC1Njn0vxJfvFpIfQaY81xMZmUU-3H9IgE7NpUiW7hR2/exec",
+      data: {
         userid: "222",
         name: "333",
         chatid: "444"
