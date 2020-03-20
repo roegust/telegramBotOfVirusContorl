@@ -50,6 +50,9 @@ job.start();
 // console.log(job.nextDates(2));
 
 bot.onText(/\/start/, msg => {
+  if (state[msg.chat.id] !== undefined) {
+    state[msg.chat.id].status = "";
+  }
   bot.sendMessage(
     msg.chat.id,
     `*Quick start* 
@@ -93,25 +96,31 @@ bot.onText(/(\d{7,8})(\ )(.+)/, async (msg, match) => {
   console.log(match[1], match[3]);
   if (state[msg.chat.id] !== undefined) {
     if (state[msg.chat.id].status === "add") {
-      await request.post(
-        {
-          url:
-            "https://script.google.com/macros/s/AKfycbxcqmLhGC1Njn0vxJfvFpIfQaY81xMZmUU-3H9IgE7NpUiW7hR2/exec",
-          followAllRedirects: true,
-          form: {
-            userid: match[1],
-            name: match[3],
-            chatid: msg.chat.id
+      if (user[match[1]] === undefined) {
+        await request.post(
+          {
+            url:
+              "https://script.google.com/macros/s/AKfycbxcqmLhGC1Njn0vxJfvFpIfQaY81xMZmUU-3H9IgE7NpUiW7hR2/exec",
+            followAllRedirects: true,
+            form: {
+              userid: match[1],
+              name: match[3],
+              chatid: msg.chat.id
+            }
+          },
+          (error, res, body) => {
+            if (error) {
+              console.error(error);
+              return;
+            }
+            bot.sendMessage(msg.chat.id, `Add user ${match[1]} success`);
           }
-        },
-        (error, res, body) => {
-          if (error) {
-            console.error(error);
-            return;
-          }
-          bot.sendMessage(msg.chat.id, body);
-        }
-      );
+        );
+      } else {
+        bot.sendMessage(msg.chat.id, `User ${match[1]} is already in the list`);
+      }
+
+      state[msg.chat.id].status = "";
     }
   }
 });
@@ -127,7 +136,10 @@ bot.onText(/\/add/, msg => {
   //   "Please add your info at https://docs.google.com/spreadsheets/d/16ctbzOVdulA8poPSlj6SUNk50HO-Fi94aJbh8O_kvsg/edit?usp=sharing"
   // );
   // bot.sendMessage(msg.chat.id, "Your chat ID is " + msg.chat.id);
-  bot.sendMessage(msg.chat.id, "Please enter your employee id and name. ex: '10610150 宗家榮'");
+  bot.sendMessage(
+    msg.chat.id,
+    "Please enter your employee id and name. ex: '10610150 宗家榮'"
+  );
 });
 
 bot.onText(/\/info/, msg => {
