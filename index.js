@@ -122,7 +122,7 @@ bot.onText(/\/test/, msg => {
 
 bot.onText(/\/reload/, async(msg) => {
   awiat loadUserList()
-  bot.sendMessage(msg.chat.id, user);
+  console.log(user)
 });
 
 bot.onText(/\/rxjs/, async msg => {
