@@ -99,9 +99,9 @@ bot.onText(/(\d{7,8})(\ )(.+)/, async (msg, match) => {
             "https://script.google.com/macros/s/AKfycbxcqmLhGC1Njn0vxJfvFpIfQaY81xMZmUU-3H9IgE7NpUiW7hR2/exec",
           followAllRedirects: true,
           form: {
-            userid: "222",
-            name: "333",
-            chatid: "444"
+            userid: match[1],
+            name: match[3],
+            chatid: msg.chat.id
           }
         },
         (error, res, body) => {
@@ -109,8 +109,7 @@ bot.onText(/(\d{7,8})(\ )(.+)/, async (msg, match) => {
             console.error(error);
             return;
           }
-          console.log(`statusCode: ${res.statusCode}`);
-          //       console.log(res);
+          bot.sendMessage(msg.chat.id, body);
         }
       );
     }
@@ -128,7 +127,7 @@ bot.onText(/\/add/, msg => {
   //   "Please add your info at https://docs.google.com/spreadsheets/d/16ctbzOVdulA8poPSlj6SUNk50HO-Fi94aJbh8O_kvsg/edit?usp=sharing"
   // );
   // bot.sendMessage(msg.chat.id, "Your chat ID is " + msg.chat.id);
-  bot.sendMessage(msg.chat.id, "Please enter your .");
+  bot.sendMessage(msg.chat.id, "Please enter your employee id and name. ex: '10610150 宗家榮'");
 });
 
 bot.onText(/\/info/, msg => {
