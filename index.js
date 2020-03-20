@@ -138,7 +138,7 @@ bot.onText(/\/apit/, msg => {
         return;
       }
       console.log(`statusCode: ${res.statusCode}`);
-      console.log(body);
+      console.log(res);
     }
   );
 });
