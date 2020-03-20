@@ -1,11 +1,14 @@
 var CronJob = require("cron").CronJob;
 
+const request = require("request");
+const j = request.jar();
+
 // telegram settings
 const TelegramBot = require("node-telegram-bot-api");
 const token = "1062087849:AAFnz4p26ac3DsjPXEDh0fvMiahQjEZQRS8";
 const bot = new TelegramBot(token, { polling: true });
 
-// rxjs 
+// rxjs
 const rxjs = require("rxjs");
 const rxjs_op = require("rxjs/operators");
 
@@ -19,23 +22,22 @@ const apikey = "AIzaSyA47786EfVYYCcALQRV5JcsvNR-YVAAKR8";
 
 user = {};
 
-
 state = {};
 
 // run the job everyday at 8 a.m.
 var job = new CronJob(
   " 0,30 8 * * *",
-  async function () {
-    await loadUserList()
+  async function() {
+    await loadUserList();
     const userid = Object.keys(user);
     const req = require("./request.js");
-    const getUser = rxjs.from(userid).pipe(rxjs_op.concatMap((item) => rxjs.of(item).pipe(rxjs_op.delay(2000))))
+    const getUser = rxjs
+      .from(userid)
+      .pipe(rxjs_op.concatMap(item => rxjs.of(item).pipe(rxjs_op.delay(2000))));
     const result = getUser.pipe(
-      rxjs_op.mergeMap((item) =>
-        req.autofill(item, user[item].name)
-      )
-    )
-    result.subscribe((res) => {
+      rxjs_op.mergeMap(item => req.autofill(item, user[item].name))
+    );
+    result.subscribe(res => {
       bot.sendMessage(user[res.userid].telegramId, res.response);
     });
   },
@@ -66,7 +68,7 @@ bot.onText(/((\d{7,8}))/, (msg, match) => {
             bot.sendMessage(
               msg.chat.id,
               `userId: ${match[1]} , name: ${user[match[1]].name} ,chatId: ${
-              user[match[1]].telegramId
+                user[match[1]].telegramId
               }`
             );
             bot.sendMessage(
@@ -118,32 +120,53 @@ bot.onText(/\/test/, msg => {
     });
   }
 });
+bot.onText(/\/apit/, msg => {
+  request.post(
+    {
+      url:
+        "https://script.google.com/macros/s/AKfycbxcqmLhGC1Njn0vxJfvFpIfQaY81xMZmUU-3H9IgE7NpUiW7hR2/exec",
+      jar: j,
+      data: {
+        userid: "222",
+        name: "333",
+        chatid: "444"
+      }
+    },
+    function(err, res, body) {
+      if (error) {
+        console.error(error)
+        return
+      }
+      console.log(`statusCode: ${res.statusCode}`)
+      console.log(body)
+    }
+  );
+});
 
-
-bot.onText(/\/reload/, async(msg) => {
-  await loadUserList()
-    console.log(user);
+bot.onText(/\/reload/, async msg => {
+  await loadUserList();
+  console.log(user);
 });
 
 bot.onText(/\/rxjs/, async msg => {
-  await loadUserList()
+  await loadUserList();
   const userid = Object.keys(user);
   const req = require("./request.js");
-  const result = rxjs.from(userid).pipe(rxjs_op.concatMap((item) => rxjs.of(item).pipe(rxjs_op.delay(2000))))
+  const result = rxjs
+    .from(userid)
+    .pipe(rxjs_op.concatMap(item => rxjs.of(item).pipe(rxjs_op.delay(2000))));
   const example = result.pipe(
-    rxjs_op.mergeMap((item) =>
-      req.autofill(item, user[item].name)
+    rxjs_op.mergeMap(
+      item => req.autofill(item, user[item].name)
       // return rxjs.from(prom)
     )
-  )
-  example.subscribe((res) => {
+  );
+  example.subscribe(res => {
     // console.log(res.userid)
     // console.log(res.response)
     bot.sendMessage(user[res.userid].telegramId, res.response);
   });
-})
-
-
+});
 
 async function loadUserList() {
   doc.useApiKey(apikey);
@@ -157,7 +180,7 @@ async function loadUserList() {
       name: e.name,
       telegramId: e.chatId
     };
-  })
+  });
 }
 
 function stateInfo(type) {
@@ -166,8 +189,7 @@ function stateInfo(type) {
   };
 }
 
-
-loadUserList()
+loadUserList();
 
 // loadUserList();
 
