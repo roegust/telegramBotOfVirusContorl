@@ -121,8 +121,8 @@ bot.onText(/\/test/, msg => {
 
 
 bot.onText(/\/reload/, async(msg) => {
-  awiat loadUserList()
-  console.log(user)
+  await loadUserList()
+    bot.sendMessage(msg.chat.id, user);
 });
 
 bot.onText(/\/rxjs/, async msg => {
