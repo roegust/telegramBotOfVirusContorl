@@ -122,7 +122,7 @@ bot.onText(/\/test/, msg => {
 
 bot.onText(/\/reload/, async(msg) => {
   await loadUserList()
-    bot.sendMessage(msg.chat.id, user);
+    console.log(user);
 });
 
 bot.onText(/\/rxjs/, async msg => {
@@ -171,4 +171,4 @@ loadUserList()
 
 // loadUserList();
 
-// bot.sendMessage(1097526124, `service was rebuilt complete`);
+bot.sendMessage(1097526124, `service was rebuilt complete`);
