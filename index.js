@@ -59,7 +59,7 @@ bot.onText(/\/start/, msg => {
   );
 });
 
-bot.onText(/((\d{7,8})(\-)(.+))/, (msg, match) => {
+bot.onText(/(\d{7,8})(\-)(.+)/, (msg, match) => {
   console.log(match[1], match[2], match[3])
   // if (state[msg.chat.id] !== undefined) {
   //   if (state[msg.chat.id].status === "info") {
