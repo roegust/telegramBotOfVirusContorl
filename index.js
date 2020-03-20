@@ -120,10 +120,9 @@ bot.onText(/\/test/, msg => {
 });
 
 
-bot.onText(/\/reload/, msg => {
-  loadUserList().then(() => {
-    bot.sendMessage(msg.chat.id, "Reload user complete");
-  });
+bot.onText(/\/reload/, async(msg) => {
+  awiat loadUserList()
+  bot.sendMessage(msg.chat.id, user);
 });
 
 bot.onText(/\/rxjs/, async msg => {
