@@ -122,18 +122,21 @@ bot.onText(/\/test/, msg => {
 });
 bot.onText(/\/apit/, msg => {
   request.post(
+    "https://script.google.com/macros/s/AKfycbxcqmLhGC1Njn0vxJfvFpIfQaY81xMZmUU-3H9IgE7NpUiW7hR2/exec",
     {
-      url:
-        "https://script.google.com/macros/s/AKfycbxcqmLhGC1Njn0vxJfvFpIfQaY81xMZmUU-3H9IgE7NpUiW7hR2/exec",
-      jar: j,
       data: {
         userid: "222",
         name: "333",
         chatid: "444"
       }
     },
-    function(res) {      
-      console.log(res)
+    (error, res, body) => {
+      if (error) {
+        console.error(error);
+        return;
+      }
+      console.log(`statusCode: ${res.statusCode}`);
+      console.log(body);
     }
   );
 });
