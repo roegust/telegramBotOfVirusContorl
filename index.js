@@ -59,35 +59,38 @@ bot.onText(/\/start/, msg => {
   );
 });
 
+bot.onText(/((\d{7,8}))/, (msg, match) => {
+  if (state[msg.chat.id] !== undefined) {
+    if (state[msg.chat.id].status === "info") {
+      loadUserList()
+        .then(() => {
+          if (user[match[1]] !== undefined) {
+            bot.sendMessage(
+              msg.chat.id,
+              `userId: ${match[1]} , name: ${user[match[1]].name} ,chatId: ${
+                user[match[1]].telegramId
+              }`
+            );
+            bot.sendMessage(
+              msg.chat.id,
+              `user: ${match[1]} is already add in daily job`
+            );
+          } else {
+            bot.sendMessage(
+              msg.chat.id,
+              `no information of userid:  ${match[1]}`
+            );
+          }
+        })
+        .then(() => {
+          state[msg.chat.id].status = "";
+        });
+    }
+  }
+});
+
 bot.onText(/(\d{7,8})(\ )(.+)/, (msg, match) => {
-  console.log(match[1], match[2], match[3])
-  // if (state[msg.chat.id] !== undefined) {
-  //   if (state[msg.chat.id].status === "info") {
-  //     loadUserList()
-  //       .then(() => {
-  //         if (user[match[1]] !== undefined) {
-  //           bot.sendMessage(
-  //             msg.chat.id,
-  //             `userId: ${match[1]} , name: ${user[match[1]].name} ,chatId: ${
-  //               user[match[1]].telegramId
-  //             }`
-  //           );
-  //           bot.sendMessage(
-  //             msg.chat.id,
-  //             `user: ${match[1]} is already add in daily job`
-  //           );
-  //         } else {
-  //           bot.sendMessage(
-  //             msg.chat.id,
-  //             `no information of userid:  ${match[1]}`
-  //           );
-  //         }
-  //       })
-  //       .then(() => {
-  //         state[msg.chat.id].status = "";
-  //       });
-  //   }
-  // }
+  console.log(match[1], match[3])
 });
 
 bot.onText(/\/add/, msg => {
