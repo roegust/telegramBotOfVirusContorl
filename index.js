@@ -98,7 +98,7 @@ bot.onText(/((\d{7,8}))/, async (msg, match) => {
     ) {
       if (
         user[match[1]] !== undefined &&
-        msg.chat.id === user[match[1]].telegramId
+        msg.chat.id.toString() === user[match[1]].telegramId
       ) {
         await request.post(
           {
@@ -123,7 +123,7 @@ bot.onText(/((\d{7,8}))/, async (msg, match) => {
           msg.chat.id,
           `There is no user of userid: ${match[1]}, please add user first`
         );
-      } else if (msg.chat.id !== user[match[1]].telegramId) {
+      } else if (msg.chat.id.toString() !== user[match[1]].telegramId) {
         await bot.sendMessage(
           msg.chat.id,
           `You have no authority to do active/deactive for this user: ${match[1]}`
@@ -175,11 +175,7 @@ bot.onText(/\/add/, msg => {
   } else {
     state[msg.chat.id].status = "add";
   }
-  // bot.sendMessage(
-  //   msg.chat.id,
-  //   "Please add your info at https://docs.google.com/spreadsheets/d/16ctbzOVdulA8poPSlj6SUNk50HO-Fi94aJbh8O_kvsg/edit?usp=sharing"
-  // );
-  // bot.sendMessage(msg.chat.id, "Your chat ID is " + msg.chat.id);
+
   bot.sendMessage(
     msg.chat.id,
     "Please enter your information. ex: '10610150@宗家榮'"
