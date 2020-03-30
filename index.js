@@ -58,7 +58,9 @@ bot.onText(/\/start/, msg => {
     msg.chat.id,
     `*Quick start* 
  /info - check user information
- /add - add new user`,
+ /add - add new user
+ /active - active user in daily job
+ /deactive - deactive user in daily job`,
     { parse_mode: "Markdown" }
   );
 });
