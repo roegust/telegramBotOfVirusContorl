@@ -126,7 +126,7 @@ bot.onText(/((\d{7,8}))/, async (msg, match) => {
       } else if (msg.chat.id !== user[match[1]].telegramId) {
         await bot.sendMessage(
           msg.chat.id,
-          `There is no user of userid: ${match[1]}, please add user first`
+          `You have no authority to do active/deactive for this user: ${match[1]}`
         );
       }
 
