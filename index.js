@@ -58,7 +58,9 @@ bot.onText(/\/start/, msg => {
     msg.chat.id,
     `*Quick start* 
  /info - check user information
- /add - add new user`,
+ /add - add new user
+ /active - active user in daily job
+ /deactive - deactive user in daily job`,
     { parse_mode: "Markdown" }
   );
 });
@@ -94,7 +96,10 @@ bot.onText(/((\d{7,8}))/, async (msg, match) => {
       state[msg.chat.id].status === "deactive" ||
       state[msg.chat.id].status === "active"
     ) {
-      if (user[match[1]] !== undefined) {
+      if (
+        user[match[1]] !== undefined &&
+        msg.chat.id === user[match[1]].telegramId
+      ) {
         await request.post(
           {
             url:
@@ -113,7 +118,12 @@ bot.onText(/((\d{7,8}))/, async (msg, match) => {
             bot.sendMessage(msg.chat.id, body);
           }
         );
-      } else {
+      } else if (user[match[1]] === undefined) {
+        await bot.sendMessage(
+          msg.chat.id,
+          `There is no user of userid: ${match[1]}, please add user first`
+        );
+      } else if (msg.chat.id !== user[match[1]].telegramId) {
         await bot.sendMessage(
           msg.chat.id,
           `There is no user of userid: ${match[1]}, please add user first`
@@ -236,7 +246,7 @@ bot.onText(/\/rxjs/, async msg => {
   //   bot.sendMessage(user[res.userid].telegramId, res.response);
   // });
   getUser.subscribe(e => {
-    console.log(e)
+    console.log(e);
   });
 });
 
