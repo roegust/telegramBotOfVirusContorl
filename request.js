@@ -21,6 +21,7 @@ form = {
   travel: 1,
   notice: 1,
   family: 1,
+  tour: 1,
   measure_date: null, //like '2020/3/11'
   symptom: 1
 };
